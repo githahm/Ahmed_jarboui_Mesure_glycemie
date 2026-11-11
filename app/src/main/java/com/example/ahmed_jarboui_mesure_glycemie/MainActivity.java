@@ -10,36 +10,101 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+
     private Button btnConsulter;
     private TextView msg;
+    private SeekBar sbAge;
+    private RadioButton rbnOui;
+    private RadioButton rbnNon;
+    private EditText etValeur;
+    private TextView textAge;
+
+    private int Age = 0;
+
+    private void init() {
+        btnConsulter = findViewById(R.id.btnConsulter);
+        sbAge        = findViewById(R.id.sbAge);
+        rbnOui       = findViewById(R.id.rbnOui);
+        rbnNon       = findViewById(R.id.rbnNon);
+        etValeur     = findViewById(R.id.etValeur);
+        msg          = findViewById(R.id.msg);
+        textAge      = findViewById(R.id.textAge);
+    }
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        btnConsulter=findViewById(R.id.btnConsulter);
-        msg=findViewById(R.id.msg);;
+        init();
 
+        sbAge.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                Age = progress;
+                textAge.setText("Votre âge : " + progress + " ans");
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
 
-        btnConsulter.setOnClickListener(new View.OnClickListener(){@Override
-        public void onClick(View v){msg.setText("Felicitation");}});
-
-
-
-
+        btnConsulter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                consulterGlycemie();
+            }
+        });
     }
-    //public void calculer(View v){
-      //  Toast.makeText(this, "le bouton consulter a ete clique", Toast.LENGTH_SHORT).show();
-    //}
 
 
+    private void consulterGlycemie() {
+        String valeurString = etValeur.getText().toString().trim();
+
+        if (valeurString.isEmpty()) {
+            Toast.makeText(this, "Veuillez entrer la valeur mesurée", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double valeur;
+        try {
+            valeur = Double.parseDouble(valeurString);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Valeur invalide", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        boolean aJeune = rbnOui.isChecked();
+        double min, max;
+
+        if (aJeune) {
+            if (Age > 13) {
+                min = 5.0;
+                max = 7.2;
+            } else if (Age >= 6) {
+                min = 5.0;
+                max = 10.0;
+            } else {
+                min = 5.5;
+                max = 10.0;
+            }
+        } else {
+            min = 0.0;
+            max = 10.5;
+        }
+
+        String resultat;
+        if (valeur < min) {
+            resultat = "Le niveau de glycémie est trop bas";
+        } else if (valeur > max) {
+            resultat = "Le niveau de glycémie est trop élevé";
+        } else {
+            resultat = "Le niveau de glycémie est normal";
+        }
+
+        msg.setText(resultat);
     }
+}

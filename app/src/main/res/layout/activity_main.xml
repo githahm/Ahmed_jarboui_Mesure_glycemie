@@ -21,13 +21,13 @@
         android:textStyle="bold"
         android:padding="30dp"/>
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/textAge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:inputType="text"
-        android:text="Votre Age"
+        android:text="Votre Age:0 ans"
         android:textSize="20dp"
         android:textStyle="bold" />
     <SeekBar
@@ -69,7 +69,7 @@
             android:textSize="20sp" />
     </RadioGroup>
     <EditText
-        android:id="@+id/valeur"
+        android:id="@+id/etValeur"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginTop="20dp"
